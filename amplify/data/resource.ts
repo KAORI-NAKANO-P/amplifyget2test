@@ -1,4 +1,10 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { createUser } from "./create-user/resource"
+import { deleteUser } from "./delete-user/resource"
+import { getUser } from "./get-user/resource"
+import { addUserToGroup } from "./add-user-to-group/resource"
+import { removeUserFromGroup } from "./remove-user-from-group/resource"
+import { postConfirmation } from "../auth/post-confirmation/resource";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -7,13 +13,74 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
+  //-------- Table
   Todo: a
     .model({
       content: a.string(),
     })
     //.authorization((allow) => [allow.publicApiKey()]),
     .authorization(allow => [allow.owner()]),
-});
+
+  UserProfile: a
+    .model({
+      email: a.string(),
+      profileOwner: a.string(),
+    })
+    .authorization((allow) => [
+      allow.ownerDefinedIn("profileOwner"),
+    ]),
+
+
+    //-------- API
+  createUser: a
+  .mutation()
+  .arguments({
+    userId: a.string().required(),
+  })
+  .authorization((allow) => [allow.group("ADMINS")])
+  .handler(a.handler.function(createUser))
+  .returns(a.json()),
+
+  deleteUser: a
+  .mutation()
+  .arguments({
+    userId: a.string().required(),
+  })
+  .authorization((allow) => [allow.group("ADMINS")])
+  .handler(a.handler.function(deleteUser))
+  .returns(a.json()),
+
+  getUser: a
+  .query()
+  .arguments({
+    userId: a.string().required(),
+  })
+  .authorization((allow) => [allow.group("ADMINS")])
+  .handler(a.handler.function(getUser))
+  .returns(a.json()),
+
+  addUserToGroup: a
+    .mutation()
+    .arguments({
+      userId: a.string().required(),
+      groupName: a.string().required(),
+    })
+    .authorization((allow) => [allow.group("ADMINS")])
+    .handler(a.handler.function(addUserToGroup))
+    .returns(a.json()),
+
+  removeUserFromGroup: a
+  .mutation()
+  .arguments({
+    userId: a.string().required(),
+    groupName: a.string().required(),
+  })
+  .authorization((allow) => [allow.group("ADMINS")])
+  .handler(a.handler.function(removeUserFromGroup))
+  .returns(a.json()),
+
+})
+.authorization((allow) => [allow.resource(postConfirmation)]);
 
 export type Schema = ClientSchema<typeof schema>;
 

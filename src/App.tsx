@@ -1,52 +1,41 @@
 
 import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
+import { Amplify } from "aws-amplify"
+import outputs from "../amplify_outputs.json"
+import { Stack } from "@mui/material";
+import { Button } from '@aws-amplify/ui-react';
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import Todo from "./pages/Todo";
+import Home from "./pages/Home";
+import Account from "./pages/Account";
 
-const client = generateClient<Schema>();
+Amplify.configure(outputs)
 
+
+// 開始
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-  
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id })
-  }
-
-  return (
-        
+  return (      
     <Authenticator>
       {({ signOut, user }) => (
-      // {({ signOut }) => (
+
         <main>
-          <h1>{user?.signInDetails?.loginId}'s todos</h1>
-          <h1>My todos</h1>
-          <button onClick={createTodo}>+ new</button>
-          <ul>
-            {todos.map((todo) => (
-              <li onClick={() => deleteTodo(todo.id)}
-              key={todo.id}>{todo.content}</li>
-            ))}
-          </ul>
-          <div>
-            🥳 App successfully hosted. Try creating a new todo.
-            <br />
-            <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-              Review next step of this tutorial.
-            </a>
-          </div>
-          <button onClick={signOut}>Sign out</button>
+          <h1>{user?.signInDetails?.loginId}</h1>
+          <Stack my={2} direction="row" justifyContent="end" spacing={1}>
+            <Button onClick={signOut}>Sign out</Button>
+          </Stack>
+          <BrowserRouter>
+            <Link to="/">Home画面</Link>
+            <Link to="/Todo">ToDo（GraphQL）</Link>
+            <Link to="/Account">ユーザアカウントの管理（Cognito）</Link>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/Todo" element={<Todo />} />
+              <Route path="/Account" element={<Account />} />
+              <Route path="*" element={<h1>Not Found Page</h1>} />
+            </Routes>
+          </BrowserRouter>
         </main>
       )}
       </Authenticator>
