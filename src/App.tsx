@@ -17,7 +17,7 @@ Amplify.configure(outputs)
 function App() {
 
   return (      
-    <Authenticator>
+    <Authenticator hideSignUp={true}>
       {({ signOut, user }) => (
 
         <main>

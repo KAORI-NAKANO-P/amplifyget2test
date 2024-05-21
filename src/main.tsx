@@ -4,7 +4,11 @@ import App from "./App.tsx";
 import "./index.css";
 import { Amplify } from "aws-amplify";
 import outputs from "../amplify_outputs.json";
-import { fetchAuthSession } from 'aws-amplify/auth'
+import { I18n } from "@aws-amplify/core";
+import { messages } from "./i18n/amplify/messages";
+
+I18n.putVocabularies(messages);
+I18n.setLanguage("ja")
 
 Amplify.configure(outputs);
 const existingConfig = Amplify.getConfig();
