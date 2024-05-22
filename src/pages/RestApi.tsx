@@ -15,8 +15,6 @@ Amplify.configure({
     REST: outputs.custom.API,
   },
 });
-const session = await fetchAuthSession();
-const token = session.tokens?.idToken
 
 // Amplify.configure(outputs, {
 //   API: {
