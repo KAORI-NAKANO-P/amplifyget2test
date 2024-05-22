@@ -42,8 +42,8 @@ const RestApi = () => {
       console.log(`${authSession?.accessToken.toString()}`)
 
 
-      const session = await fetchAuthSession();
-      const token = session.tokens?.idToken
+      //const session = await fetchAuthSession();
+      //const token = session.tokens?.idToken
 
       const restOperation = get({ 
         apiName: 'myRestApi',
