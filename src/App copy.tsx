@@ -4,7 +4,6 @@ import '@aws-amplify/ui-react/styles.css'
 import { /*FormEvent,*/ useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { /*signUp,*/ getCurrentUser /*,fetchAuthSession*/  } from "aws-amplify/auth";
 import { Amplify } from "aws-amplify"
 import outputs from "../amplify_outputs.json"
 import { Hub } from 'aws-amplify/utils';
