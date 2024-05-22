@@ -3,8 +3,10 @@ import '@aws-amplify/ui-react/styles.css'
 import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { get } from 'aws-amplify/api';
-import { fetchAuthSession } from 'aws-amplify/auth';
+import outputs from "../../amplify_outputs.json"
+import { Amplify } from "aws-amplify"
+
+Amplify.configure(outputs)
 
 const client = generateClient<Schema>();
 
@@ -21,28 +23,7 @@ const Account = () => {
   useEffect(() => {
   }, []);
 
-  async function getItem() {
-    try {
-      const authSession = (await fetchAuthSession()).tokens;
-      console.log(`${authSession?.accessToken.toString()}`)
-      const restOperation = get({ 
-        apiName: 'myRestApi',
-        path: 'items' ,
-        options: {
-          headers: {
-            'Content-Type' : 'application/json',
-            Authorization: `${authSession?.accessToken.toString()}`
-          }
-        }
-      });
-      const response = await restOperation.response;
-      console.log('GET call succeeded: ', response);
-    } catch (error) {
-      console.log('GET call failed: ', error);
-    }
-  }
-
-  function setInput(key:any, value:any) {
+ function setInput(key:any, value:any) {
     setNewAcc({ ...newAcc, [key]: value });
   }
   function setInput2(key:any, value:any) {
@@ -129,10 +110,6 @@ const Account = () => {
   return (
     <div> 
       <br />  
-      <p>---------------------------------------------</p>
-      <button onClick={getItem}>
-        REST-API(GET)
-      </button>
       <p>---------------------------------------------</p>
       <button onClick={createUser}>
         アカウントの登録

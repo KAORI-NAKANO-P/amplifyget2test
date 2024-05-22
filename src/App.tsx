@@ -9,6 +9,7 @@ import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Todo from "./pages/Todo";
 import Home from "./pages/Home";
 import Account from "./pages/Account";
+import RestApi from "./pages/RestApi";
 
 Amplify.configure(outputs)
 
@@ -29,10 +30,12 @@ function App() {
             <Link to="/">Home画面</Link>
             <Link to="/Todo">ToDo（GraphQL）</Link>
             <Link to="/Account">ユーザアカウントの管理（Cognito）</Link>
+            <Link to="/RestApi">RestApi</Link>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/Todo" element={<Todo />} />
               <Route path="/Account" element={<Account />} />
+              <Route path="/RestApi" element={<RestApi />} />
               <Route path="*" element={<h1>Not Found Page</h1>} />
             </Routes>
           </BrowserRouter>
